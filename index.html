@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cricket Card Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="player-area" id="player1">
+            <div class="health-bar">
+                <div class="health-fill"></div>
+                <span class="health-text">100%</span>
+            </div>
+            <div class="hand"></div>
+        </div>
+        
+        <div class="battle-area">
+            <div id="comparison-result"></div>
+            <div id="game-status" class="status-box"></div>
+        </div>
+
+        <div class="player-area" id="player2">
+            <div class="health-bar">
+                <div class="health-fill"></div>
+                <span class="health-text">100%</span>
+            </div>
+            <div class="hand"></div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <select id="attribute-selector" disabled></select>
+        <button id="play-card" disabled>Play Selected Card</button>
+        <div id="mode-selector"></div>
+    </div>
+
+    <script type="module" src="src/main.js"></script>
+</body>
+</html>
