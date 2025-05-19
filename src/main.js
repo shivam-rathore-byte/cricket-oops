@@ -305,7 +305,7 @@ class GameUI {
           <div>${result.attribute}: ${result.cardB[result.attribute]}</div>
         </div>
       </div>
-      <h4>Winner: ${result.winner === 0 ? 'Player 1' : 'Computer'}</h4>
+      <h4>Winner: ${result.winner === 0 ? 'Player 1' : 'Player 2'}</h4>
     `;
     }
 
