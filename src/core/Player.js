@@ -30,4 +30,10 @@ export class Player {
     setSpecialMode(mode) {
       this.specialMode = mode;
     }
+
+    activateSpecialMode() {
+      if (this.hasUsedSpecial) return;
+      this.specialMode.activate();
+      this.hasUsedSpecial = true;
+    }
   }

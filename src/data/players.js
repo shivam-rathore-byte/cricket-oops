@@ -2,6 +2,7 @@ import { PlayerData } from "../models/PlayerData.js";
 // Sample player data
 export const playersData = [
     new PlayerData("Virat Kohli", 12650, 262, 46, 64, 140, 4),
+    new PlayerData("abc", 100000, 262, 46, 64, 140, 960),
     new PlayerData("Sachin Tendulkar", 18426, 463, 49, 70, 140, 154),
     new PlayerData("M.S. Dhoni", 10773, 350, 16, 73, 321, 1),
     new PlayerData("Jacques Kallis", 13289, 166, 45, 58, 131, 292),

@@ -56,23 +56,20 @@ export class GameManager {
   }
 
   applyDamage(result, currentPlayer, opponent) {
-    const baseDamage = 10;
+    let damage = 10;
     const context = {
       player: currentPlayer,
-      playedCard: result.winner === 0 ? result.cardA : result.cardB,
+      isSpecialActive: currentPlayer.specialMode?.active,
       isFinalCard: this.isFinalCard
     };
-
-    let damage = baseDamage;
-    debugger
-    if (currentPlayer.specialMode?.active) {
+  
+    if (context.isSpecialActive) {
       damage = currentPlayer.specialMode.calculateDamage(
-        baseDamage,
+        damage,
         result.winner === 0,
         context
       );
       currentPlayer.specialMode.deactivate();
-      currentPlayer.hasUsedSpecial = true;
     }
 
     if (result.winner === 0) {

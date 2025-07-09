@@ -30,6 +30,7 @@ class GameUI {
 
         this.setupModeSelector();
         this.enableControls(false);
+        this.addSpecialModeControls();
       }
 
       startGame() {
@@ -47,7 +48,6 @@ class GameUI {
     
         this.players[0].setSpecialMode(new (modeMap[m1])());
         this.players[1].setSpecialMode(new (modeMap[m2])());
-    
         // Disable mode selectors
         this.enableControls(true);
         this.initGame();
@@ -153,12 +153,13 @@ class GameUI {
       async handlePlay() {
         const attribute = this.attributeSelector.value;
         const result = await this.gameManager.playTurn({
-          cardIndexA: this.selectedIndex[0],
-          cardIndexB: this.selectedIndex[1],
+          cardIndexA: this.selectedIndex[this.gameManager.currentPlayerIndex],
+          cardIndexB: this.selectedIndex[1-this.gameManager.currentPlayerIndex],
           attribute
         });
     
         this.displayResult(result);
+        this.updateSpecialButtons();
         //setTimeout(()=>{this.hideCard(1-this.gameManager.currentPlayerIndex)},1000)
         this.updateGameState();
     
@@ -201,22 +202,22 @@ class GameUI {
         this.playButton.disabled = !(hasSelection && hasAttribute);
       }
 
-    async handlePlayCard() {
-        const attribute = document.getElementById('attribute-selector').value;
-        const result = await this.gameManager.playTurn({
-            cardIndex: this.selectedCardIndex,
-            attribute
-        });
+    // async handlePlayCard() {
+    //     const attribute = document.getElementById('attribute-selector').value;
+    //     const result = await this.gameManager.playTurn({
+    //         cardIndex: this.selectedCardIndex,
+    //         attribute
+    //     });
 
-        this.displayResult(result);
-        this.updateGameState();
+    //     this.displayResult(result);
+    //     this.updateGameState();
 
-        if (this.gameManager.checkGameOver()) {
-            this.handleGameOver();
-        } else {
-            this.handleComputerTurn();
-        }
-    }
+    //     if (this.gameManager.checkGameOver()) {
+    //         this.handleGameOver();
+    //     } else {
+    //         this.handleComputerTurn();
+    //     }
+    // }
 
     async handleComputerTurn() {
         if (this.gameManager.currentPlayerIndex === 1) {
@@ -286,7 +287,7 @@ class GameUI {
             const fill = document.querySelector(`#player${index + 1} .health-fill`);
             const text = document.querySelector(`#player${index + 1} .health-text`);
             fill.style.width = `${player.health}%`;
-            text.textContent = `${Math.round(player.health)}%`;
+            text.textContent = `${player.health}%`;
         });
     }
 
@@ -305,8 +306,16 @@ class GameUI {
           <div>${result.attribute}: ${result.cardB[result.attribute]}</div>
         </div>
       </div>
-      <h4>Winner: ${result.winner === 0 ? 'Player 1' : 'Player 2'}</h4>
+      <h4>Winner: ${this.getWinner(result.winner) ? 'Player 1' : 'Player 2'}</h4>
     `;
+    }
+
+    getWinner(winner){
+      if(this.gameManager.currentPlayerIndex == 0){
+        return winner == 1;
+      }else{
+        return winner == 0;
+      }
     }
 
     handleGameOver() {
@@ -334,6 +343,43 @@ class GameUI {
       this.playButton.disabled = !enableGameplay;
       document.getElementById('player1-mode').disabled = enableGameplay;
       document.getElementById('player2-mode').disabled = enableGameplay;
+    }
+
+    addSpecialModeControls() {
+      this.specialButton1 = document.createElement('button');
+      this.specialButton1.className = 'special-activate';
+      this.specialButton1.textContent = 'Activate Special';
+      this.specialButton1.addEventListener('click', () => this.activateSpecial(0));
+    
+      this.specialButton2 = document.createElement('button');
+      this.specialButton2.className = 'special-activate';
+      this.specialButton2.textContent = 'Activate Special';
+      this.specialButton2.addEventListener('click', () => this.activateSpecial(1));
+    
+      document.querySelector('#player1').appendChild(this.specialButton1);
+      document.querySelector('#player2').appendChild(this.specialButton2);
+    }
+    
+    activateSpecial(playerIndex) {
+      if (playerIndex !== this.gameManager.currentPlayerIndex) return;
+      
+      this.players[playerIndex].activateSpecialMode();
+      this.updateSpecialButtons();
+      alert(`${this.players[playerIndex].name} activated ${this.players[playerIndex].specialMode.name}!`);
+    }
+    
+    updateSpecialButtons() {
+      const currentPlayer = this.gameManager.currentPlayerIndex;
+      const otherPlayer = 1 - currentPlayer;
+      
+      this[`specialButton${currentPlayer + 1}`].style.display = 'block';
+      // Current player's button
+      this[`specialButton${currentPlayer + 1}`].disabled = 
+        this.players[currentPlayer].hasUsedSpecial || 
+        !this.players[currentPlayer].specialMode.canActivate(this.players[currentPlayer]);
+      
+      // Other player's button
+      this[`specialButton${otherPlayer + 1}`].style.display = 'none';
     }
 }
 

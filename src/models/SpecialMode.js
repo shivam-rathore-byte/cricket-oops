@@ -17,4 +17,8 @@ export class SpecialMode {
     calculateDamage(baseDamage, isWinner, context) {
       throw new Error("Must implement calculateDamage");
     }
+
+    canActivate(player) {
+      return !player.hasUsedSpecial;
+    }
   }

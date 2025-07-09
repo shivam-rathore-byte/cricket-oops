@@ -205,3 +205,16 @@ button:disabled {
     background-color: #4CAF50;
 }
 
+.special-activate {
+    background: #ff9800;
+    margin: 10px 0;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .special-activate:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+  
